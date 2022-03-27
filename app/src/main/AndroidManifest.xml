@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ASDF">
         <activity
-            android:name=".MenuActivity"
+            android:name=".GameActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
