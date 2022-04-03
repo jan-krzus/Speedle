@@ -4,7 +4,7 @@ object Board {
 //    val board = arrayOf<Array<Boolean>>()
     var size = Pair(6,5)
     var startingPoint = Pair(0,0)
-    var board = arrayOf(arrayOf(true,true,true,true,true,),arrayOf(false,false,false,false,false,),arrayOf(false,false,false,false,false,),arrayOf(false,false,false,false,false,),arrayOf(false,false,false,false,false,),arrayOf(false,false,false,false,false,))
+    var board = arrayOf(arrayOf(true,true,true,true,true),arrayOf(false,false,false,false,false),arrayOf(false,false,false,false,false),arrayOf(false,false,false,false,false),arrayOf(false,false,false,false,false),arrayOf(false,false,false,false,false))
     var tileBoard = arrayOf(arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY))
 
     init {

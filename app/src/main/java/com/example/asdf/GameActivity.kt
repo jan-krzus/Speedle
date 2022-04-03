@@ -13,22 +13,19 @@ import androidx.core.view.GestureDetectorCompat
 import kotlin.math.log
 //
 private lateinit var detector: GestureDetectorCompat
-//private lateinit var movement: Movement
+private lateinit var movement: GameActivity.Movement
 
 class GameActivity : AppCompatActivity() {
-    var movement: Movement = Movement(Board)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         detector = GestureDetectorCompat(this, SwipeDetect())
         Board.size = Pair(5,6)
-        Board.startingPoint = Pair(0,0)
-//        var movement = Movement(Board)
-//        movement.view = findViewById(R.id.board)
+        Board.startingPoint = Pair(1,2)
+        movement = Movement(Board)
 
 
     }
-
     fun dialog(view: View) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("G A M E  O V E R")
@@ -186,23 +183,26 @@ class GameActivity : AppCompatActivity() {
 
         }
     }
-    val viewBoard : View = findViewById(R.id.board)
     private fun onSwipeDown(){
+        val viewBoard : View = findViewById(R.id.board)
         viewBoard.invalidate()
         movement.move(Direction.DOWN)
     }
 
     private fun onSwipeUp(){
+        val viewBoard : View = findViewById(R.id.board)
         viewBoard.invalidate()
         movement.move(Direction.UP)
     }
 
     internal fun onSwipeLeft(){
+        val viewBoard : View = findViewById(R.id.board)
         viewBoard.invalidate()
         movement.move(Direction.LEFT)
     }
 
     internal fun onSwipeRight(){
+        val viewBoard : View = findViewById(R.id.board)
         viewBoard.invalidate()
         movement.move(Direction.RIGHT)
     }
