@@ -63,13 +63,13 @@ class GameActivity : AppCompatActivity() {
 
 
         private fun getNextDirection(): Direction? {
-            if (currentPosition.first > 0 && board.isOnTrack(Pair(currentPosition.second, currentPosition.first-1)))
+            if (currentPosition.first > 0 && board.isOnTrack(Pair(currentPosition.first-1, currentPosition.second)))
                 return Direction.LEFT
-            if (currentPosition.first < board.size.first-1 && board.isOnTrack(Pair(currentPosition.second, currentPosition.first+1)))
+            if (currentPosition.first < board.size.first-1 && board.isOnTrack(Pair(currentPosition.first+1, currentPosition.second)))
                 return Direction.RIGHT
-            if (currentPosition.second > 0 && board.isOnTrack(Pair(currentPosition.second-1, currentPosition.first)))
+            if (currentPosition.second > 0 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second-1)))
                 return Direction.UP
-            if (currentPosition.second < board.size.second-1 && board.isOnTrack(Pair(currentPosition.second+1, currentPosition.first)))
+            if (currentPosition.second < board.size.second-1 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second+1)))
                 return Direction.DOWN
             return null // it was the last tile
         }
@@ -133,8 +133,9 @@ class GameActivity : AppCompatActivity() {
                         previousDirection = Direction.UP
                     }
                 }
-                setTile()
             }
+            setTile()
+
         }
 
         fun gameOver() {
