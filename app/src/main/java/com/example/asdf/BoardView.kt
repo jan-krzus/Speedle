@@ -12,7 +12,6 @@ class BoardView(context: Context?, attrs: AttributeSet?): View(context, attrs) {
     var res: Resources = resources
     var board = Board
 
-
     override fun onDraw(canvas: Canvas?) {
         for (row in 0 until board.size.second) {
             for (col in 0 until board.size.first) {

@@ -21,7 +21,7 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
         detector = GestureDetectorCompat(this, SwipeDetect())
         Board.size = Pair(5,6)
-        Board.startingPoint = Pair(1,2)
+        Board.startingPoint = Pair(0,0)
         movement = Movement(Board)
 
 
