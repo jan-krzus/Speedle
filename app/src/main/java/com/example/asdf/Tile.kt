@@ -1,6 +1,6 @@
 package com.example.asdf
 
-enum class Tile(imageId: Int) {
+enum class Tile(val imageId: Int) {
     EMPTY(R.drawable.tile_empty_light),
     BLANK_GREEN(R.drawable.tile_green_light),
     LEFT_GREEN(R.drawable.tile_green_arrow_left_light),

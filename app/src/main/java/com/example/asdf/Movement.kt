@@ -1,10 +1,12 @@
 package com.example.asdf
 
+import android.view.View
+
 class Movement(var board: Board) {
     private var currentPosition: Pair<Int, Int> = board.startingPoint
     var madeMistake = false
+    var view : View? = null
     var previousDirection: Direction? = null
-
     init {
         setTile()
     }
@@ -89,6 +91,6 @@ class Movement(var board: Board) {
     }
 
     fun gameOver() {
-        // TODO: implement
+
     }
 }

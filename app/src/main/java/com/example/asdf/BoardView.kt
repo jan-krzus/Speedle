@@ -10,12 +10,14 @@ import android.view.View
 class BoardView(context: Context?, attrs: AttributeSet?): View(context, attrs) {
     val cellSide: Float = 190f
     var res: Resources = resources
-    var bitmap = BitmapFactory.decodeResource(res, R.drawable.tile_empty_light)
-    var bitmaps = Bitmap.createScaledBitmap(bitmap,cellSide.toInt(),cellSide.toInt(),false)
+    var board = Board
+
 
     override fun onDraw(canvas: Canvas?) {
-        for (row in 0 until 6) {
-            for (col in 0 until 5) {
+        for (row in 0 until board.size.second) {
+            for (col in 0 until board.size.first) {
+                var bitmap = BitmapFactory.decodeResource(res, board.tileBoard[row][col].imageId)
+                var bitmaps = Bitmap.createScaledBitmap(bitmap,cellSide.toInt(),cellSide.toInt(),false)
                 canvas?.drawBitmap(bitmaps,0f + (col * cellSide),0f + (row * cellSide),Paint())
             }
         }

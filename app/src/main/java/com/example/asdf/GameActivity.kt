@@ -3,12 +3,14 @@ package com.example.asdf
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GestureDetectorCompat
+import kotlin.math.log
 
 private lateinit var detector: GestureDetectorCompat
 private lateinit var movement: Movement
@@ -18,7 +20,11 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         detector = GestureDetectorCompat(this, SwipeDetect())
-        movement = Movement(Board(Pair(6,5), Pair(0,0)))
+        Board.size = Pair(5,6)
+        Board.startingPoint = Pair(0,0)
+        movement = Movement(Board)
+        movement.view = findViewById(R.id.board)
+
     }
 
     fun dialog(view: View) {
@@ -45,8 +51,8 @@ class GameActivity : AppCompatActivity() {
 
     inner class SwipeDetect : GestureDetector.SimpleOnGestureListener() {
 
-        private val  SWIPE_THRESHOLD = 100
-        private val SWIPE_VELOCITY_THRESHOLD = 100
+        private val  SWIPE_THRESHOLD = 10
+        private val SWIPE_VELOCITY_THRESHOLD = 10
 
         override fun onFling(
             downEvent: MotionEvent?,
@@ -84,25 +90,25 @@ class GameActivity : AppCompatActivity() {
 
         }
     }
-
+    val viewBoard : View = findViewById(R.id.board)
     private fun onSwipeDown(){
-        Toast.makeText(this, "DOWN",Toast.LENGTH_LONG)
-//        movement.move(Movement.Direction.DOWN)
+        viewBoard.invalidate()
+        movement.move(Movement.Direction.DOWN)
     }
 
     private fun onSwipeUp(){
-        Toast.makeText(this, "UP",Toast.LENGTH_LONG)
-//        movement.move(Movement.Direction.UP)
+        viewBoard.invalidate()
+        movement.move(Movement.Direction.UP)
     }
 
     internal fun onSwipeLeft(){
-        Toast.makeText(this, "LEFT",Toast.LENGTH_LONG)
-//        movement.move(Movement.Direction.LEFT)
+        viewBoard.invalidate()
+        movement.move(Movement.Direction.LEFT)
     }
 
     internal fun onSwipeRight(){
-        Toast.makeText(this, "RIGHT",Toast.LENGTH_LONG)
-//        movement.move(Movement.Direction.RIGHT)
+        viewBoard.invalidate()
+        movement.move(Movement.Direction.RIGHT)
     }
 
 
