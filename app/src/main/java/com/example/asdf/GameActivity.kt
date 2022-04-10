@@ -142,6 +142,7 @@ class GameActivity : AppCompatActivity() {
 
         // on move
         fun move(direction: Direction) {
+            if (getNextDirection() == null) gameOver()
             if (direction == getNextDirection()) {
                 madeMistake = false
                 setTile()
@@ -169,7 +170,9 @@ class GameActivity : AppCompatActivity() {
                         }
                     }
                     Direction.RIGHT -> {
-                        if (currentPosition.first <= board.size.first) gameOver()
+                        if (currentPosition.first >= board.size.first) youLost()
+                        else {
+                        currentPosition = Pair(currentPosition.first+1, currentPosition.second)
                         previousDirection = Direction.LEFT
                         }
                     }
