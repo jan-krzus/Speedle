@@ -1,16 +1,16 @@
 package com.example.asdf
 
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
-import kotlin.math.log
+import hallianinc.opensource.timecounter.StopWatch
+
 //
 private lateinit var detector: GestureDetectorCompat
 private lateinit var movement: GameActivity.Movement
@@ -25,11 +25,14 @@ class GameActivity : AppCompatActivity() {
         movement = Movement(Board)
 
 
+//        stopwatch.time+=10 -> dodaje sekundę kary
+
+
     }
-    fun dialog(view: View) {
+    fun dialog(view: View, time : Int) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("G A M E  O V E R")
-        builder.setMessage("S C O R E :  " + 10)
+        builder.setMessage("S C O R E :  $time")
 
         builder.setPositiveButton(android.R.string.yes) { dialog, which ->
             Toast.makeText(applicationContext,
@@ -57,8 +60,11 @@ class GameActivity : AppCompatActivity() {
         var madeMistake = false
         var view : View? = null
         var previousDirection: Direction? = null
+        val stopwatch = StopWatch(findViewById(R.id.timer))
+
         init {
             setTile()
+            stopwatch.start()
         }
 
 
@@ -139,7 +145,9 @@ class GameActivity : AppCompatActivity() {
         }
 
         fun gameOver() {
-            dialog(findViewById(R.id.board))
+            stopwatch.pause()
+            dialog(findViewById(R.id.board), stopwatch.time)
+            stopwatch.stop()
         }
     }
 
