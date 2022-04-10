@@ -2,7 +2,7 @@ package com.example.asdf
 
 object Board {
 //    val board = arrayOf<Array<Boolean>>()
-    var size = Pair(6,5)
+    var size = Pair(5,6)
     var startingPoint = Pair(0,0)
     var board = arrayOf(
         arrayOf(true, false, false, false, false),
@@ -22,9 +22,9 @@ object Board {
     )
 
     init {
-        fillBoard()
-        assert(size.first > startingPoint.first && size.second > startingPoint.second)
-        assert(board[startingPoint.second][startingPoint.first])
+//        fillBoard()
+//        assert(size.first > startingPoint.first && size.second > startingPoint.second)
+//        assert(board[startingPoint.second][startingPoint.first])
     }
 
     fun fillBoard() {

@@ -1,6 +1,9 @@
 package com.example.asdf
 
 
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -10,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import hallianinc.opensource.timecounter.StopWatch
+
 
 //
 private lateinit var detector: GestureDetectorCompat
@@ -22,11 +26,11 @@ class GameActivity : AppCompatActivity() {
         detector = GestureDetectorCompat(this, SwipeDetect())
         Board.size = Pair(5,6)
         Board.startingPoint = Pair(0,0)
+        Board.fillBoard(resources)
         movement = Movement(Board)
 
 
 //        stopwatch.time+=10 -> dodaje sekundę kary
-
 
     }
     fun dialog(view: View, time : Int) {
@@ -34,10 +38,36 @@ class GameActivity : AppCompatActivity() {
         builder.setTitle("G A M E  O V E R")
         builder.setMessage("S C O R E :  $time")
 
-        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-            Toast.makeText(applicationContext,
-                android.R.string.ok, Toast.LENGTH_SHORT).show()
-        }
+        builder.setPositiveButton("OK",
+            DialogInterface.OnClickListener { dialog, id ->
+                val intent = Intent(this, MainActivity::class.java)
+//                val b = Bundle()
+//                b.putBoolean("new_window", true) //sets new window
+//                intent.putExtras(b)
+                startActivity(intent)
+            })
+
+        builder.show()
+    }
+
+    fun dialogLost(view: View) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("G A M E  O V E R")
+        builder.setMessage("Y O U  L O S T")
+
+
+        builder.setPositiveButton("OK",
+            DialogInterface.OnClickListener { dialog, id ->
+                val intent = Intent(this, MainActivity::class.java)
+//                val b = Bundle()
+//                b.putBoolean("new_window", true) //sets new window
+//                intent.putExtras(b)
+                startActivity(intent)
+            })
+//        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+//            Toast.makeText(applicationContext,
+//                android.R.string.ok, Toast.LENGTH_SHORT).show()
+//        }
 
         builder.show()
     }
@@ -95,6 +125,7 @@ class GameActivity : AppCompatActivity() {
                     Direction.UP -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.UP_GREEN
                     Direction.RIGHT -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.RIGHT_GREEN
                     Direction.DOWN -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.DOWN_GREEN
+                    null -> gameOver()
                 }
             }
         }
@@ -119,29 +150,46 @@ class GameActivity : AppCompatActivity() {
                 currentPosition = getNextPosition()
                 previousDirection = null
             } else {
-                if (madeMistake) gameOver()
+                stopwatch.time+=10
+                if (madeMistake) youLost()
                 madeMistake = true
                 when (direction) {
                     Direction.LEFT -> {
-                        if (currentPosition.first <= 0) gameOver()
-                        previousDirection = Direction.RIGHT
+                        if (currentPosition.first <= 0) youLost()
+                        else {
+                            currentPosition = Pair(currentPosition.first - 1, currentPosition.second)
+                            previousDirection = Direction.RIGHT
+                        }
                     }
                     Direction.UP -> {
-                        if (currentPosition.second <= 0) gameOver()
-                        previousDirection = Direction.DOWN
+                        if (currentPosition.second <= 0) youLost()
+                        else {
+                            currentPosition = Pair(currentPosition.first, currentPosition.second - 1)
+                            previousDirection = Direction.DOWN
+                        }
                     }
                     Direction.RIGHT -> {
                         if (currentPosition.first <= board.size.first) gameOver()
                         previousDirection = Direction.LEFT
+                        }
                     }
                     Direction.DOWN -> {
-                        if (currentPosition.second <= board.size.second) gameOver()
-                        previousDirection = Direction.UP
+                        if (currentPosition.second >= board.size.second) youLost()
+                        else {
+                            currentPosition = Pair(currentPosition.first, currentPosition.second + 1)
+                            previousDirection = Direction.UP
+                        }
                     }
                 }
             }
             setTile()
 
+        }
+
+        fun youLost(){
+            stopwatch.pause()
+            dialogLost(findViewById(R.id.board))
+            stopwatch.stop()
         }
 
         fun gameOver() {
