@@ -3,7 +3,6 @@ package com.example.asdf
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -12,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
-import androidx.core.view.MotionEventCompat
 import hallianinc.opensource.timecounter.StopWatch
 import kotlinx.android.synthetic.main.activity_game.*
 
@@ -90,10 +88,8 @@ class GameActivity : AppCompatActivity() {
     inner class Movement(var board: Board) {
         private var currentPosition: Pair<Int, Int> = board.startingPoint
         var madeMistake = false
-        var view : View? = null
         var previousDirection: Direction? = null
         val stopwatch = StopWatch(findViewById(R.id.timer))
-        var started = false
 
 
         init {

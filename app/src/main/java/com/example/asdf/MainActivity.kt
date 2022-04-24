@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity() {
             val storage = ScoreStorage(this)
             val triesNormal = storage.getScoresNormal().first
             val avgNormal = storage.getScoresNormal().second
-            val triesHard= storage.getScoresNormal().first
-            val avgHard = storage.getScoresNormal().second
+            val triesHard= storage.getScoresHard().first
+            val avgHard = storage.getScoresHard().second
             val builder = AlertDialog.Builder(this)
             builder.setTitle("A B O U T")
             builder.setMessage("M Y   S C O R E : \n\n" +
