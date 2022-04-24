@@ -4,6 +4,7 @@ package com.example.asdf
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -27,8 +28,9 @@ class GameActivity : AppCompatActivity() {
         val mode_first  = intent.getIntExtra("mode_first", Board.Mode.NORMAL.size.first)
         val mode_second  = intent.getIntExtra("mode_second", Board.Mode.NORMAL.size.second)
         Board.size = Pair(mode_first, mode_second)
-        Board.startingPoint = Pair(0,0)
-        Board.fillBoard(resources)
+        Board.mode = if (Board.size.first == 5) Board.Mode.NORMAL else Board.Mode.HARD
+        Board.generateBoard()
+//        Board.fillBoard(resources)
         setContentView(R.layout.activity_game)
         movement = Movement(Board)
         storage = ScoreStorage(this)
@@ -38,7 +40,7 @@ class GameActivity : AppCompatActivity() {
     fun dialog(view: View, time : Int, score : Int) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("G A M E  O V E R")
-        builder.setMessage("S C O R E :  $time\n M Y   S C O R E: $score")
+        builder.setMessage("S C O R E :  $time\n\n M Y   S C O R E: $score")
 
         builder.setPositiveButton("OK",
             DialogInterface.OnClickListener { dialog, id ->
@@ -51,8 +53,8 @@ class GameActivity : AppCompatActivity() {
 
     fun dialogLost(view: View) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("G A M E  O V E R")
-        builder.setMessage("Y O U  L O S T")
+        builder.setTitle("G A M E   O V E R")
+        builder.setMessage("Y O U   L O S T")
 
 
         builder.setPositiveButton("OK",
@@ -99,15 +101,22 @@ class GameActivity : AppCompatActivity() {
 
 
         private fun getNextDirection(): Direction? {
-            if (currentPosition.first > 0 && board.isOnTrack(Pair(currentPosition.first-1, currentPosition.second)))
-                return Direction.LEFT
-            if (currentPosition.first < board.size.first-1 && board.isOnTrack(Pair(currentPosition.first+1, currentPosition.second)))
-                return Direction.RIGHT
-            if (currentPosition.second > 0 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second-1)))
-                return Direction.UP
-            if (currentPosition.second < board.size.second-1 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second+1)))
-                return Direction.DOWN
-            return null // it was the last tile
+//            if (! board.isOnTrack(Pair(currentPosition.first, currentPosition.second))) return null
+            return Board.directionBoard[currentPosition.second][currentPosition.first]
+//
+//            if (currentPosition.first > 0 && board.isOnTrack(Pair(currentPosition.first-1, currentPosition.second)))
+//                return Direction.LEFT
+//            if (currentPosition.first < board.size.first-1 && board.isOnTrack(Pair(currentPosition.first+1, currentPosition.second)))
+//                return Direction.RIGHT
+//            if (currentPosition.second > 0 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second-1)))
+//                return Direction.UP
+//            if (currentPosition.second < board.size.second-1 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second+1)))
+//                return Direction.DOWN
+//            return null // it was the last tile
+        }
+
+        private fun getDirection(): Direction? {
+            return Board.directionBoard[currentPosition.second][currentPosition.first]
         }
 
         // set tile on current position
@@ -125,7 +134,6 @@ class GameActivity : AppCompatActivity() {
                     Direction.UP -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.UP_GREEN
                     Direction.RIGHT -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.RIGHT_GREEN
                     Direction.DOWN -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.DOWN_GREEN
-                    null -> gameOver()
                 }
             }
         }
@@ -142,18 +150,26 @@ class GameActivity : AppCompatActivity() {
 
         // on move
         fun move(direction: Direction) {
-            if (getNextDirection() == null) gameOver()
-            if (direction == getNextDirection()) {
+
+            var nextDir = getNextDirection()
+            if (nextDir == null) {
+                nextDir = previousDirection
+            }
+            if (direction == nextDir) {
                 madeMistake = false
                 setTile()
                 // set tile on track to false after completing
-                board.board[currentPosition.second][currentPosition.first] = false
+//                board.board[currentPosition.second][currentPosition.first] = false
                 currentPosition = getNextPosition()
                 previousDirection = null
+
+                nextDir = getNextDirection()
             } else {
+                Log.w(null, "direction != nextDir")
                 stopwatch.time+=10
                 if (madeMistake) youLost()
                 madeMistake = true
+
                 when (direction) {
                     Direction.LEFT -> {
                         if (currentPosition.first <= 0) youLost()
@@ -186,6 +202,12 @@ class GameActivity : AppCompatActivity() {
                 }
             }
             setTile()
+            Log.i(null, "made mistake: $madeMistake")
+            Log.i(null, "position X: ${currentPosition.first}")
+            Log.i(null, "position Y: ${currentPosition.second}")
+            Log.i(null, "GetNextDir: ${getNextDirection()}")
+            Log.i(null, "nextDir: ${nextDir}")
+            Log.i(null, "previousDir: ${previousDirection}")
 
         }
 
