@@ -17,9 +17,9 @@ import hallianinc.opensource.timecounter.StopWatch
 import kotlinx.android.synthetic.main.activity_game.*
 
 
-//
 private lateinit var detector: GestureDetectorCompat
 private lateinit var movement: GameActivity.Movement
+private lateinit var storage: ScoreStorage
 
 class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

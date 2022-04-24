@@ -64,7 +64,16 @@
             android:layout_height="63dp"
             android:layout_margin="16dp"
             android:fontFamily="sans-serif-black"
-            android:text="A B O U T" />
+            android:text="A B O U T " />
+
+        <Button
+            android:id="@+id/button13"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:layout_margin="16dp"
+            android:fontFamily="sans-serif-black"
+            android:text="R E S E T" />
 
     </LinearLayout>
 
