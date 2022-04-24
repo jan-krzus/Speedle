@@ -12,7 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
+import androidx.core.view.MotionEventCompat
 import hallianinc.opensource.timecounter.StopWatch
+import kotlinx.android.synthetic.main.activity_game.*
 
 
 //
@@ -22,28 +24,27 @@ private lateinit var movement: GameActivity.Movement
 class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
+
         detector = GestureDetectorCompat(this, SwipeDetect())
-        Board.size = Pair(5,6)
+        val mode_first  = intent.getIntExtra("mode_first", Board.Mode.NORMAL.size.first)
+        val mode_second  = intent.getIntExtra("mode_second", Board.Mode.NORMAL.size.second)
+        Board.size = Pair(mode_first, mode_second)
         Board.startingPoint = Pair(0,0)
         Board.fillBoard(resources)
+        setContentView(R.layout.activity_game)
         movement = Movement(Board)
+        storage = ScoreStorage(this)
 
-
-//        stopwatch.time+=10 -> dodaje sekundę kary
 
     }
-    fun dialog(view: View, time : Int) {
+    fun dialog(view: View, time : Int, score : Int) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("G A M E  O V E R")
-        builder.setMessage("S C O R E :  $time")
+        builder.setMessage("S C O R E :  $time\n M Y   S C O R E: $score")
 
         builder.setPositiveButton("OK",
             DialogInterface.OnClickListener { dialog, id ->
                 val intent = Intent(this, MainActivity::class.java)
-//                val b = Bundle()
-//                b.putBoolean("new_window", true) //sets new window
-//                intent.putExtras(b)
                 startActivity(intent)
             })
 
@@ -73,13 +74,14 @@ class GameActivity : AppCompatActivity() {
     }
 
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+
         return if (detector.onTouchEvent(event)) {
             true
-        } else {
-            super.onTouchEvent(event)
         }
-    }
+
+        else{ super.onTouchEvent(event)
+    }}
 
     enum class Direction {
         LEFT, UP, RIGHT, DOWN
@@ -91,6 +93,8 @@ class GameActivity : AppCompatActivity() {
         var view : View? = null
         var previousDirection: Direction? = null
         val stopwatch = StopWatch(findViewById(R.id.timer))
+        var started = false
+
 
         init {
             setTile()
@@ -197,7 +201,15 @@ class GameActivity : AppCompatActivity() {
 
         fun gameOver() {
             stopwatch.pause()
-            dialog(findViewById(R.id.board), stopwatch.time)
+            val score : Int
+            if (board.size.first == 5) {
+                storage.addScoreNormal(stopwatch.time)
+                score = storage.getScoresNormal().second
+            }else{
+                storage.addScoreHard(stopwatch.time)
+                score = storage.getScoresHard().second
+            }
+            dialog(findViewById(R.id.board), stopwatch.time, score)
             stopwatch.stop()
         }
     }

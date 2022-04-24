@@ -55,7 +55,7 @@
             android:layout_height="63dp"
             android:layout_margin="16dp"
             android:fontFamily="sans-serif-black"
-            android:text="M O D E" />
+            android:text="S T A R T  ( H A R D )" />
 
         <Button
             android:id="@+id/button12"

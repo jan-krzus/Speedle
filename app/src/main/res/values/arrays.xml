@@ -21,9 +21,9 @@
     </string-array>
     <string-array
         name="board_2">
-        <item>00000</item>
+        <item>00010</item>
         <item>04320</item>
-        <item>05010</item>
+        <item>05000</item>
         <item>06000</item>
         <item>0789a</item>
         <item>0000b</item>
@@ -37,21 +37,67 @@
         <item>07890</item>
         <item>00000</item>
     </string-array>
+
     <string-array
-        name="board_b1">
-        <item>120efg0</item>
-        <item>030d0hi</item>
-        <item>540c00j</item>
-        <item>60ab0lk</item>
-        <item>7890nm0</item>
-        <item>0000o00</item>
-        <item>0000p00</item>
-        <item>0000000</item>
+        name="board_4">
+        <item>0100000000</item>
+        <item>0200000000</item>
+        <item>0307810000</item>
+        <item>0456010000</item>
+        <item>0000010000</item>
+        <item>0001110000</item>
+        <item>0001000000</item>
+        <item>0001111100</item>
+        <item>0000000100</item>
+        <item>0000000100</item>
+        <item>0000001100</item>
+        <item>0000000000</item>
     </string-array>
+
+    <string-array
+        name="board_5">
+        <item>0000222200</item>
+        <item>0000200200</item>
+        <item>0000200100</item>
+        <item>0000200000</item>
+        <item>0000200000</item>
+        <item>0000200000</item>
+        <item>0000222200</item>
+        <item>0000000000</item>
+        <item>0000000000</item>
+        <item>0000000000</item>
+        <item>0000000000</item>
+        <item>0000000000</item>
+    </string-array>
+
+    <string-array
+        name="board_6">
+        <item>0000000000</item>
+        <item>0000000000</item>
+        <item>0000000000</item>
+        <item>0000222220</item>
+        <item>0000200000</item>
+        <item>0000222220</item>
+        <item>0000000020</item>
+        <item>0000000220</item>
+        <item>0000000200</item>
+        <item>0000000222</item>
+        <item>0000000002</item>
+        <item>0000000001</item>
+    </string-array>
+
     <string-array
         name="boards_5x6">
         <item>@array/board_1</item>
         <item>@array/board_2</item>
         <item>@array/board_3</item>
+    </string-array>
+
+
+    <string-array
+        name="boards_10x12">
+        <item>@array/board_4</item>
+        <item>@array/board_5</item>
+        <item>@array/board_6</item>
     </string-array>
 </resources>

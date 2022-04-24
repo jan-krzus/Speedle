@@ -1,38 +1,32 @@
 package com.example.asdf
 
-import android.content.Context
 import android.content.res.Resources
 import android.util.Log
-import androidx.annotation.StyleableRes
 import kotlin.random.Random
 
 object Board{
-//    val board = arrayOf<Array<Boolean>>()
-    var size = Pair(5,6)
+    var size = Pair(0, 0) //Pair(5,6)
     var startingPoint = Pair(0,0)
     var board = emptyArray<Array<Boolean>>()
 
-    var tileBoard = arrayOf(
-        arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-        arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-        arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-        arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-        arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-        arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY)
-    )
+    var tileBoard = emptyArray<Array<Tile>>()
 
-    init {
-//        fillBoard()
-//        assert(size.first > startingPoint.first && size.second > startingPoint.second)
-//        assert(board[startingPoint.second][startingPoint.first])
+    enum class Mode(val size: Pair<Int, Int>) {
+        NORMAL(Pair(5, 6)),
+        HARD(Pair(10, 12))
     }
 
+    fun initTileBoard(){
+        tileBoard = Array(size.second,{i -> Array(size.first, {Tile.EMPTY})})
+    }
+
+
     fun fillBoard(resources: Resources) {
+        initTileBoard()
         board = Array(size.second) { Array(size.first) {false} }
         // get random board of boards
-        val arrBoards = resources.obtainTypedArray(R.array.boards_5x6)
-        val arr = resources.getStringArray(arrBoards.getResourceId(1, -1))
-
+        val arrBoards = if(size.first == 5) resources.obtainTypedArray(R.array.boards_5x6) else resources.obtainTypedArray(R.array.boards_10x12)
+        val arr = resources.getStringArray(arrBoards.getResourceId(Random.nextInt(arrBoards.length()), -1))
         for (row in arr.withIndex()) {
             for (col in row.value.withIndex()) {
                 if (col.value != '0') {
@@ -43,14 +37,7 @@ object Board{
             }
         }
 
-        tileBoard = arrayOf(
-            arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-            arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-            arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-            arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-            arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY),
-            arrayOf(Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY,Tile.EMPTY)
-        )
+
     }
 
     fun isOnTrack(position: Pair<Int, Int>): Boolean {

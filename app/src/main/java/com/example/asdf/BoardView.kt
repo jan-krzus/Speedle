@@ -8,9 +8,9 @@ import android.view.View
 
 
 class BoardView(context: Context?, attrs: AttributeSet?): View(context, attrs) {
-    val cellSide: Float = 190f
     var res: Resources = resources
     var board = Board
+    val cellSide: Float = if(board.size.first == 5) 190f else 95f
 
     override fun onDraw(canvas: Canvas?) {
         for (row in 0 until board.size.second) {
