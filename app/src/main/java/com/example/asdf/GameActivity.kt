@@ -99,116 +99,69 @@ class GameActivity : AppCompatActivity() {
             stopwatch.start()
         }
 
-
-        private fun getNextDirection(): Direction? {
-//            if (! board.isOnTrack(Pair(currentPosition.first, currentPosition.second))) return null
-            return Board.directionBoard[currentPosition.second][currentPosition.first]
-//
-//            if (currentPosition.first > 0 && board.isOnTrack(Pair(currentPosition.first-1, currentPosition.second)))
-//                return Direction.LEFT
-//            if (currentPosition.first < board.size.first-1 && board.isOnTrack(Pair(currentPosition.first+1, currentPosition.second)))
-//                return Direction.RIGHT
-//            if (currentPosition.second > 0 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second-1)))
-//                return Direction.UP
-//            if (currentPosition.second < board.size.second-1 && board.isOnTrack(Pair(currentPosition.first, currentPosition.second+1)))
-//                return Direction.DOWN
-//            return null // it was the last tile
-        }
-
-        private fun getDirection(): Direction? {
-            return Board.directionBoard[currentPosition.second][currentPosition.first]
-        }
-
-        // set tile on current position
-        private fun setTile() {
-            if (madeMistake) {
-                when(previousDirection) {
-                    Direction.LEFT -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.LEFT_YELLOW
-                    Direction.UP -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.UP_YELLOW
-                    Direction.RIGHT -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.RIGHT_YELLOW
-                    Direction.DOWN -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.DOWN_YELLOW
-                }
+        fun setTile(tile: Tile? = null) {
+            if (tile != null) {
+                board.tileBoard[currentPosition.second][currentPosition.first] = tile
             } else {
-                when(getNextDirection()) {
-                    Direction.LEFT -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.LEFT_GREEN
-                    Direction.UP -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.UP_GREEN
-                    Direction.RIGHT -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.RIGHT_GREEN
-                    Direction.DOWN -> board.tileBoard[currentPosition.second][currentPosition.first] = Tile.DOWN_GREEN
-                }
+                board.tileBoard[currentPosition.second][currentPosition.first] =
+                    when (board.directionBoard[currentPosition.second][currentPosition.first]) {
+                        Direction.LEFT -> Tile.LEFT_GREEN
+                        Direction.UP -> Tile.UP_GREEN
+                        Direction.RIGHT -> Tile.RIGHT_GREEN
+                        Direction.DOWN -> Tile.DOWN_GREEN
+                        null -> when (previousDirection) {
+                            Direction.LEFT -> Tile.LEFT_YELLOW
+                            Direction.UP -> Tile.UP_YELLOW
+                            Direction.RIGHT -> Tile.RIGHT_YELLOW
+                            Direction.DOWN -> Tile.DOWN_YELLOW
+                            null -> Tile.EMPTY
+                        }
+                    }
             }
         }
 
-        private fun getNextPosition(): Pair<Int, Int> {
-            when (getNextDirection()) {
-                Direction.LEFT -> return Pair(currentPosition.first-1, currentPosition.second)
-                Direction.UP -> return Pair(currentPosition.first, currentPosition.second-1)
-                Direction.RIGHT -> return Pair(currentPosition.first+1, currentPosition.second)
-                Direction.DOWN -> return Pair(currentPosition.first, currentPosition.second+1)
+        fun moveToDirection(direction: Direction) {
+                currentPosition = when(direction) {
+                    Direction.LEFT -> Pair(currentPosition.first - 1, currentPosition.second)
+                    Direction.UP -> Pair(currentPosition.first, currentPosition.second - 1)
+                    Direction.RIGHT -> Pair(currentPosition.first + 1, currentPosition.second)
+                    Direction.DOWN -> Pair(currentPosition.first, currentPosition.second + 1)
             }
-            return currentPosition // it was the last tile
+            if (
+                (currentPosition.first < 0)
+                or (currentPosition.first >= board.size.first)
+                or (currentPosition.second < 0)
+                or (currentPosition.second >= board.size.second)
+            )
+                youLost()
         }
 
         // on move
         fun move(direction: Direction) {
-
-            var nextDir = getNextDirection()
-            if (nextDir == null) {
-                nextDir = previousDirection
-            }
-            if (direction == nextDir) {
-                madeMistake = false
-                setTile()
-                // set tile on track to false after completing
-//                board.board[currentPosition.second][currentPosition.first] = false
-                currentPosition = getNextPosition()
-                previousDirection = null
-
-                nextDir = getNextDirection()
-            } else {
-                Log.w(null, "direction != nextDir")
-                stopwatch.time+=10
-                if (madeMistake) youLost()
-                madeMistake = true
-
-                when (direction) {
-                    Direction.LEFT -> {
-                        if (currentPosition.first <= 0) youLost()
-                        else {
-                            currentPosition = Pair(currentPosition.first - 1, currentPosition.second)
-                            previousDirection = Direction.RIGHT
-                        }
-                    }
-                    Direction.UP -> {
-                        if (currentPosition.second <= 0) youLost()
-                        else {
-                            currentPosition = Pair(currentPosition.first, currentPosition.second - 1)
-                            previousDirection = Direction.DOWN
-                        }
-                    }
-                    Direction.RIGHT -> {
-                        if (currentPosition.first >= board.size.first) youLost()
-                        else {
-                        currentPosition = Pair(currentPosition.first+1, currentPosition.second)
-                        previousDirection = Direction.LEFT
-                        }
-                    }
-                    Direction.DOWN -> {
-                        if (currentPosition.second >= board.size.second) youLost()
-                        else {
-                            currentPosition = Pair(currentPosition.first, currentPosition.second + 1)
-                            previousDirection = Direction.UP
-                        }
-                    }
+            if ((!madeMistake) and (board.directionBoard[currentPosition.second][currentPosition.first] == direction)) {
+                moveToDirection(direction)
+                if (board.directionBoard[currentPosition.second][currentPosition.first] == null) {
+                    gameOver()
                 }
+            } else if (madeMistake) {
+                if (previousDirection == direction) {
+                    moveToDirection(direction)
+                    madeMistake = false
+                } else
+                    youLost()
+            } else {
+                stopwatch.time += 10
+                previousDirection = when(direction) {
+                    Direction.LEFT -> Direction.RIGHT
+                    Direction.UP -> Direction.DOWN
+                    Direction.RIGHT -> Direction.LEFT
+                    Direction.DOWN -> Direction.UP
+                }
+                setTile(Tile.EMPTY)
+                moveToDirection(direction)
+                madeMistake = true
             }
             setTile()
-            Log.i(null, "made mistake: $madeMistake")
-            Log.i(null, "position X: ${currentPosition.first}")
-            Log.i(null, "position Y: ${currentPosition.second}")
-            Log.i(null, "GetNextDir: ${getNextDirection()}")
-            Log.i(null, "nextDir: ${nextDir}")
-            Log.i(null, "previousDir: ${previousDirection}")
-
         }
 
         fun youLost(){
